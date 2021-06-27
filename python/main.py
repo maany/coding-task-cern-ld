@@ -20,8 +20,9 @@ print(landscape)
 
 # prepare mountain dict format based on parsed entities
 mountains = [
-    {'left': entity.left, 'right': entity.right, 'height': entity.height}
-    for entity in landscape if entity.is_mountain
+    {"left": entity.left, "right": entity.right, "height": entity.height}
+    for entity in landscape
+    if entity.is_mountain
 ]
 
 # Part 2: calculate and print area

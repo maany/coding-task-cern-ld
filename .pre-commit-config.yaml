@@ -1,0 +1,48 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: detect-private-key
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: check-case-conflict     # check fnames for case-insensitive file systems
+      - id: check-ast               # whether files parse as valid Python
+      - id: debug-statements
+      - id: check-docstring-first   # checks common error of code after docstrings
+      - id: mixed-line-ending       # next: unify how text files are encoded ->
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-json              # next: verify configs syntactically correct ->
+      - id: check-toml
+      - id: check-yaml
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: "00851f30cbb74899b15a05640d943a1059501903"
+    hooks:
+      - id: pyupgrade
+        args: [--py36-plus]
+
+  - repo: https://github.com/ambv/black
+    rev: "026c81b83454f176a9f9253cbfb70be2c159d822"
+    hooks:
+      - id: black
+        language_version: python3.7
+
+
+  - repo: local
+    hooks:
+      - id: flake8
+        name: flake8 python
+        stages: [commit]
+        language: system
+        entry: flake8 
+        types: [python]
+        exclude: setup.py
+
+      - id: mypy
+        name: mypy
+        stages: [commit]
+        language: system
+        entry: mypy python
+        types: [python]
+        pass_filenames: false
