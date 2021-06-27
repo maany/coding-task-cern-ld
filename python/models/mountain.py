@@ -1,7 +1,7 @@
-from python.models.abstract_entity import AbstractEntity
+from python.models.abstract_entity import AbstractEntity, AbstractEntityMeta
 
 
-class Mountain(AbstractEntity):
+class Mountain(AbstractEntity, metaclass=AbstractEntityMeta):
     def __init__(self, idx):
         super(Mountain, self).__init__(
             idx=idx,

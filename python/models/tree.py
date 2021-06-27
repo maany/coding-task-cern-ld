@@ -1,7 +1,7 @@
-from python.models.abstract_entity import AbstractEntity
+from python.models.abstract_entity import AbstractEntity, AbstractEntityMeta
 
 
-class Tree(AbstractEntity):
+class Tree(AbstractEntity, metaclass=AbstractEntityMeta):
 
     def __init__(self, idx):
         super().__init__(

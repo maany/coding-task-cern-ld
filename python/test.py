@@ -7,7 +7,6 @@ from python.landscape_utils.mountain_utils import (
     inflection_points_and_peak_tuples,
     calculate_mountain_area,
     get_mountain_by_index)
-from python.models.abstract_entity import AbstractEntity
 
 from python.models.mountain import Mountain
 from python.models.tree import Tree
@@ -127,6 +126,3 @@ class Test(unittest.TestCase):
         self.assertTrue(tree.is_tree)
         self.assertFalse(mountain.is_tree)
         self.assertFalse(tree.is_mountain)
-
-        self.assertTrue(mountain.is_abstract_entity)
-        self.assertTrue(mountain.is_abstract_entity)

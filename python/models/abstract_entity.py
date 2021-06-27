@@ -1,25 +1,23 @@
 class AbstractEntityMeta(type):
+    created_entities = {}
+
     def __init__(cls, name, bases, dict):
         super().__init__(name, bases, dict)
-        subclasses = cls.__subclasses__()
 
-        property_name = f"is_{name.lower()}"
-        setattr(cls, property_name, True)
+        for existing_entity_name, existing_entity_cls in AbstractEntityMeta.created_entities.items():
+            attribute = f"is_{existing_entity_name}"
+            current_attribute = f"is_{name.lower()}"
+            setattr(cls, attribute, False)
+            setattr(existing_entity_cls, current_attribute, False)
 
-    def add_is_x_attributes(self, cls):
-        subclasses = cls.__subclasses__()
-
-        # property_name = f"is_{entity_type}"
-        # if not getattr(cls, property_name, False):
-        #     setattr(cls, property_name, False)
-        # setattr(instance, property_name, True)
+        AbstractEntityMeta.created_entities[name.lower()] = cls
+        setattr(cls, f"is_{name.lower()}", True)
 
 
-class AbstractEntity(metaclass=AbstractEntityMeta):
+class AbstractEntity:
     """
     A class to represent entities in a landscape
     """
-    used_ids = []
 
     def __init__(self, idx, entity_type, attributes: dict, *args, **kwargs):
         self._attribute_dict = attributes
