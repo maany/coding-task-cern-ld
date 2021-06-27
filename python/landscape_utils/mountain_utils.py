@@ -14,13 +14,6 @@ def sort_mountains(mountains, left_index=True):
     return sorted_mountains
 
 
-def rename_key(mountain, left=False):
-    if left:
-        mountain["val"] = mountain.pop("left")
-    else:
-        mountain["val"] = mountain.pop("right")
-
-
 def get_x_axis(indexed_mountains):
     left_sorted_mountains = [
         ("left", mountain["id"], mountain["left"])
@@ -99,6 +92,7 @@ def inflection_points_and_peak_tuples(mountains, pina_collider_filtered_peaks):
 
 
 def calculate_mountain_area(mountain, left, right):
+
     mountain_left = mountain['left']
     mountain_right = mountain['right']
 

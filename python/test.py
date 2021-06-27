@@ -1,5 +1,5 @@
 import unittest
-from python.core.pina_collider import (
+from python.landscape_utils.mountain_utils import (
     sort_mountains,
     append_index_to_mountains,
     get_x_axis,
@@ -7,6 +7,8 @@ from python.core.pina_collider import (
     inflection_points_and_peak_tuples,
     calculate_mountain_area,
     get_mountain_by_index)
+
+from python.models.mountain import Mountain
 
 
 class Test(unittest.TestCase):
@@ -98,4 +100,19 @@ class Test(unittest.TestCase):
             print(f"Area between points {left_bound}, {right_bound}: {mountain_area}")
             total_area = total_area + mountain_area
             print(f"Total Area: {total_area}")
-        self.assertEquals(total_area, 39.25)
+        self.assertEqual(total_area, 39.25)
+
+    def test_mountain_attribute_features(self):
+        mountain = Mountain()
+        mountain.left = 10
+        self.assertEqual(mountain.left, 10)
+
+        mountain_attributes = mountain.get_attrbutes_as_dict()
+        self.assertEqual(mountain.left, mountain_attributes['left'])
+
+        mountain.right = 20
+        self.assertEqual(mountain.right, mountain_attributes['right'])
+
+        mountain.left = 15
+        self.assertEqual(mountain['left'], 15)
+        self.assertEqual(mountain['left'], mountain.left)
