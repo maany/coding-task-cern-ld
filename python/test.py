@@ -4,7 +4,7 @@ from python.core.pina_collider import (
     append_index_to_mountains,
     get_x_axis,
     pina_collider as pina,
-    inflection_points_and_peak_tuples
+    inflection_points_and_peak_tuples,
 )
 
 
@@ -53,7 +53,7 @@ class Test(unittest.TestCase):
             (4, 8.5, 5),
             (8.5, 10.5, 6),
             (10.5, 11.5, 2),
-            (11.5, 15, 1)
+            (11.5, 15, 1),
         ]
 
     def test_indexed_mountains(self):
@@ -83,5 +83,7 @@ class Test(unittest.TestCase):
         self.assertListEqual(self.expected_pina_collider_output, pina_collisions)
 
     def test_inflection_map(self):
-        region_area_map = inflection_points_and_peak_tuples(self.indexed_mountains, self.expected_pina_collider_output)
+        region_area_map = inflection_points_and_peak_tuples(
+            self.indexed_mountains, self.expected_pina_collider_output
+        )
         self.assertListEqual(self.expected_inflection_map, region_area_map)

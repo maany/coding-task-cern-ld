@@ -68,30 +68,37 @@ def pina_collider(x_axis_tuples):
                 raise Exception("WTF event")
     return [x for x in closed_peaks if x not in pina_peaks]
 
+
 def get_mountain_by_index(indexed_mountains, index):
-    return next((mountain for mountain in indexed_mountains if mountain["id"] == index), None)
+    return next(
+        (mountain for mountain in indexed_mountains if mountain["id"] == index), None
+    )
+
 
 def inflection_point(mountain_i, mountain_j):
-    if mountain_i['left'] >= mountain_j['left']:
+    if mountain_i["left"] >= mountain_j["left"]:
         raise IndexError("WTF error happened duuudde")
-    if mountain_i['right'] <= mountain_j['left']:
-        return mountain_i['right']
+    if mountain_i["right"] <= mountain_j["left"]:
+        return mountain_i["right"]
     else:
-        return mountain_i['height'] + mountain_i['left']
+        return mountain_i["height"] + mountain_i["left"]
+
 
 def inflection_points_and_peak_tuples(mountains, pina_collider_filtered_peaks):
     inflection_map = []
     # TODO check empty
-    marker_left = get_mountain_by_index(mountains,pina_collider_filtered_peaks[0])['left']
+    marker_left = get_mountain_by_index(mountains, pina_collider_filtered_peaks[0])[
+        "left"
+    ]
     next_peak_idx = None
     next_mountain = None
     for i, peak_idx in enumerate(pina_collider_filtered_peaks, start=1):
         if i == len(pina_collider_filtered_peaks) - 1:
             last_mountain = get_mountain_by_index(mountains, peak_idx)
-            inflection_map.append((marker_left, last_mountain['right'], peak_idx))
+            inflection_map.append((marker_left, last_mountain["right"], peak_idx))
             # TODO log breaking out of loop
             break
-        next_peak_idx = pina_collider_filtered_peaks[i+1]
+        next_peak_idx = pina_collider_filtered_peaks[i + 1]
         current_mountain = get_mountain_by_index(mountains, peak_idx)
         next_mountain = get_mountain_by_index(mountains, next_peak_idx)
         inflex_pt = inflection_point(current_mountain, next_mountain)
