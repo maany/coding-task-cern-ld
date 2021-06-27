@@ -4,8 +4,9 @@ from python.core.pina_collider import (
     append_index_to_mountains,
     get_x_axis,
     pina_collider as pina,
-    inflection_points_and_peak_tuples
-)
+    inflection_points_and_peak_tuples,
+    calculate_mountain_area,
+    get_mountain_by_index)
 
 
 class Test(unittest.TestCase):
@@ -86,3 +87,15 @@ class Test(unittest.TestCase):
         region_area_map = inflection_points_and_peak_tuples(self.indexed_mountains, self.expected_pina_collider_output)
         self.assertListEqual(self.expected_inflection_map, region_area_map)
 
+    def test_area(self):
+        inflection_map = self.expected_inflection_map
+        total_area = 0
+        for elem in inflection_map:
+            left_bound, right_bound, mountain_idx = elem
+            mountain = get_mountain_by_index(self.indexed_mountains, mountain_idx)
+            mountain_area = calculate_mountain_area(mountain, left_bound, right_bound)
+            print(f"Mountain {mountain_idx}: {mountain}")
+            print(f"Area between points {left_bound}, {right_bound}: {mountain_area}")
+            total_area = total_area + mountain_area
+            print(f"Total Area: {total_area}")
+        self.assertEquals(total_area, 39.25)
