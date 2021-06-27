@@ -107,7 +107,7 @@ class Test(unittest.TestCase):
         mountain.left = 10
         self.assertEqual(mountain.left, 10)
 
-        mountain_attributes = mountain.get_attrbutes_as_dict()
+        mountain_attributes = mountain.attributes
         self.assertEqual(mountain.left, mountain_attributes['left'])
 
         mountain.right = 20
@@ -116,3 +116,4 @@ class Test(unittest.TestCase):
         mountain.left = 15
         self.assertEqual(mountain['left'], 15)
         self.assertEqual(mountain['left'], mountain.left)
+        self.assertEqual(mountain.attributes['left'], 15)
