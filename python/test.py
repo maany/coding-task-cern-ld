@@ -7,8 +7,10 @@ from python.landscape_utils.mountain_utils import (
     inflection_points_and_peak_tuples,
     calculate_mountain_area,
     get_mountain_by_index)
+from python.models.abstract_entity import AbstractEntity
 
 from python.models.mountain import Mountain
+from python.models.tree import Tree
 
 
 class Test(unittest.TestCase):
@@ -103,7 +105,7 @@ class Test(unittest.TestCase):
         self.assertEqual(total_area, 39.25)
 
     def test_mountain_attribute_features(self):
-        mountain = Mountain()
+        mountain = Mountain(1)
         mountain.left = 10
         self.assertEqual(mountain.left, 10)
 
@@ -117,3 +119,14 @@ class Test(unittest.TestCase):
         self.assertEqual(mountain['left'], 15)
         self.assertEqual(mountain['left'], mountain.left)
         self.assertEqual(mountain.attributes['left'], 15)
+
+    def test_entity_types(self):
+        mountain = Mountain(0)
+        tree = Tree(1)
+        self.assertTrue(mountain.is_mountain)
+        self.assertTrue(tree.is_tree)
+        self.assertFalse(mountain.is_tree)
+        self.assertFalse(tree.is_mountain)
+
+        self.assertTrue(mountain.is_abstract_entity)
+        self.assertTrue(mountain.is_abstract_entity)

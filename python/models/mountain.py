@@ -2,8 +2,10 @@ from python.models.abstract_entity import AbstractEntity
 
 
 class Mountain(AbstractEntity):
-    def __init__(self):
+    def __init__(self, idx):
         super(Mountain, self).__init__(
+            idx=idx,
+            entity_type="mountain",
             attributes=
                 {
                     "left": 0,
