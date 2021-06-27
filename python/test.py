@@ -103,26 +103,40 @@ class Test(unittest.TestCase):
             print(f"Total Area: {total_area}")
         self.assertEqual(total_area, 39.25)
 
-    def test_mountain_attribute_features(self):
+    def test_entity_attributes(self):
         mountain = Mountain(1)
         mountain.left = 10
         self.assertEqual(mountain.left, 10)
 
-        mountain_attributes = mountain.attributes
-        self.assertEqual(mountain.left, mountain_attributes['left'])
+        self.assertEqual(mountain.left, mountain['left'])
 
         mountain.right = 20
-        self.assertEqual(mountain.right, mountain_attributes['right'])
+        self.assertEqual(mountain.right, mountain['right'])
 
         mountain.left = 15
         self.assertEqual(mountain['left'], 15)
         self.assertEqual(mountain['left'], mountain.left)
-        self.assertEqual(mountain.attributes['left'], 15)
+        self.assertEqual(mountain._attribute_dict['left'], 15)
 
     def test_entity_types(self):
         mountain = Mountain(0)
         tree = Tree(1)
+
         self.assertTrue(mountain.is_mountain)
         self.assertTrue(tree.is_tree)
         self.assertFalse(mountain.is_tree)
         self.assertFalse(tree.is_mountain)
+
+        self.assertEqual("Mountain", mountain.entity_type)
+
+    def test_entity_string_repr(self):
+        mountain = Mountain(2)
+        mountain.left = 5
+        mountain.right = 7
+        mountain.height = 1
+
+        expected_str_output = "ID: 2\ntype: Mountain\nleft: 5\nright: 7\nheight: 1"
+        print(f"expected: {expected_str_output}")
+        mountain_str = str(mountain)
+        print(f"actual: {mountain_str}")
+        self.assertEqual(expected_str_output, mountain_str)
