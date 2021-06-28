@@ -5,6 +5,8 @@ from python.landscape_model_framework.exceptions import (
     SchemaNotRegisteredException,
     InvalidSyntax,
 )
+from python.landscape_model_framework.exceptions import LoadingError
+
 
 logger = logging.getLogger(__name__)
 
@@ -202,7 +204,10 @@ class Landscape:
         for dummy_entity in all_dummy_entities:
             loader = None
             if dummy_entity["type"] in Landscape.registered_loaders:
-                loader = Landscape.registered_loaders[dummy_entity["type"]]
+                try:
+                    loader = Landscape.registered_loaders[dummy_entity["type"]]
+                except LoadingError as ex:
+                    logger.warning(ex)
             else:
                 logger.warning(
                     f"No loader found for entity type {dummy_entity['type']}"

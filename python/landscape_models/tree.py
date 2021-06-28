@@ -1,5 +1,6 @@
 from typing import TypeVar, Type
 from python.landscape_model_framework.abstract_entity import AbstractEntity, EntityMeta
+from python.landscape_model_framework.exceptions import LoadingError
 
 # annotation
 tree = TypeVar("tree")
@@ -13,11 +14,17 @@ class Tree(AbstractEntity, metaclass=EntityMeta):
 
     @classmethod
     def load(cls: Type[tree], dummy_tree: dict) -> tree:
+        if len(dummy_tree["all_attrs"]) < 2:
+            raise LoadingError(
+                f"Specify both center, altitude for Tree entity {dummy_mountain}."
+            )
+
         tree = None
         if "id" in dummy_tree:
             tree = Tree(dummy_tree["id"])
         else:
             tree = Tree()
+
         for attribute in tree.custom_attributes:
             if attribute in dummy_tree["all_attrs"]:
                 value = dummy_tree["all_attrs"][attribute]

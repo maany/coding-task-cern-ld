@@ -3,10 +3,10 @@ class SchemaNotRegisteredException(Exception):
         self.entity_type = entity_type
 
 
-class IncompleteDataException(Exception):
+class LoadingError(Exception):
     """Raised if loaders for registered entities for Landscape do not have sufficient information from parsed input to generate an object.
     Arguments:
-        message {str} -- details about the missing information
+        message {str} -- details about the loading issue
     """
 
     def __init__(self, message):
