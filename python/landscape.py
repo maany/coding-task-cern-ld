@@ -274,7 +274,7 @@ class Landscape:
             dummy_entity_attributes_map[entity_id][attr_name] = val
             return val
         else:
-            val = Landscape.evaluate_attribute(
+            calculated_val = Landscape.evaluate_attribute(
                 referenced_entity_id,
                 referenced_entity_attribute,
                 referenced_entity_attribute_value,
@@ -282,6 +282,11 @@ class Landscape:
                 max_passes,
                 depth + 1,
             )
-            dummy_entity_attributes_map[referenced_entity_id][attr_name] = val
+            if operation == "+":
+                val = calculated_val + offset
+            elif operation == "-":
+                val = calculated_val - offset
+            else:
+                val = calculated_val
             dummy_entity_attributes_map[entity_id][attr_name] = val
             return val

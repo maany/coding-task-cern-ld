@@ -1,5 +1,5 @@
 import unittest
-
+import logging
 import data_fetch
 from landscape import Landscape
 from landscape_utils.area_algorithm import (
@@ -14,6 +14,8 @@ from landscape_utils.area_algorithm import (
 
 from landscape_models.mountain import Mountain
 from landscape_models.tree import Tree
+
+logger = logging.getLogger(__name__)
 
 
 class TestAreaAlgorithm(unittest.TestCase):
@@ -103,10 +105,10 @@ class TestAreaAlgorithm(unittest.TestCase):
             left_bound, right_bound, mountain_idx = elem
             mountain = get_mountain_by_index(self.indexed_mountains, mountain_idx)
             mountain_area = calculate_mountain_area(mountain, left_bound, right_bound)
-            print(f"Mountain {mountain_idx}: {mountain}")
-            print(f"Area between points {left_bound}, {right_bound}: {mountain_area}")
+            logger.debug(f"Mountain {mountain_idx}: {mountain}")
+            logger.debug(f"Area between points {left_bound}, {right_bound}: {mountain_area}")
             total_area = total_area + mountain_area
-            print(f"Total Area: {total_area}")
+            logger.debug(f"Total Area: {total_area}")
         self.assertEqual(total_area, 39.25)
 
 
@@ -178,12 +180,12 @@ class TestLandscapeParsing(unittest.TestCase):
         landscape = Landscape()
         landscape.load(self.SAMPLE_DATA)
         for element in landscape:
-            print(element)
-        print(landscape)
+            logger.debug(element)
+        logger.debug(landscape)
 
     def test_attribute_chain_processing(self):
         pass
 
     def test_landscapre_registration(self):
-        print("Modules")
-        print(Landscape().register_loaders())
+        logger.debug("Modules")
+        logger.debug(Landscape().register_loaders())
