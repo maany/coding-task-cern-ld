@@ -12,7 +12,10 @@ class EntityMeta(type):
         EntityMeta.register_loader_and_schema(cls, name, dict)
 
     def append_is_attrs(cls, name):
-        for existing_entity_name, existing_entity_cls in EntityMeta.created_entities.items():
+        for (
+            existing_entity_name,
+            existing_entity_cls,
+        ) in EntityMeta.created_entities.items():
             attribute = f"is_{existing_entity_name}"
             current_attribute = f"is_{name.lower()}"
             setattr(cls, attribute, False)
@@ -24,21 +27,28 @@ class EntityMeta(type):
 
     def register_loader_and_schema(cls, name, dict):
         cls_path = f'{dict["__module__"]}.{dict["__qualname__"]}'
-        if 'unicode_8_bit' not in dict:
-            raise ValueError(f'Please specify an class variable of type string `unicode_8_bit` in {cls_path}'
-                             f'This value is used to find objects of type {name} while parsing input data.')
-
-        if 'load' not in dict:
-            raise ValueError(f'Please specify a classmethod `load(str_repr: str) -> {cls_path}` in {cls_path}. '
-                             f'This function is used to generate objects of type {name} while parsing input data.')
-
-        if 'default_attribute_map' not in dict:
+        if "unicode_8_bit" not in dict:
             raise ValueError(
-                f'In {cls_path}, please specify a classmethod default_attribute_map() -> dict that returns a '
-                f'dictionary [T] of schema -> T[attribute_name] = default_attribute_value')
+                f"Please specify an class variable of type string `unicode_8_bit` in {cls_path}"
+                f"This value is used to find objects of type {name} while parsing input data."
+            )
+
+        if "load" not in dict:
+            raise ValueError(
+                f"Please specify a classmethod `load(str_repr: str) -> {cls_path}` in {cls_path}. "
+                f"This function is used to generate objects of type {name} while parsing input data."
+            )
+
+        if "default_attribute_map" not in dict:
+            raise ValueError(
+                f"In {cls_path}, please specify a classmethod default_attribute_map() -> dict that returns a "
+                f"dictionary [T] of schema -> T[attribute_name] = default_attribute_value"
+            )
 
         Landscape.registered_loaders[cls.unicode_8_bit] = cls.load
-        Landscape.registered_entity_schemas[cls.unicode_8_bit] = cls.default_attribute_map
+        Landscape.registered_entity_schemas[
+            cls.unicode_8_bit
+        ] = cls.default_attribute_map
 
 
 class AbstractEntity:
@@ -67,7 +77,8 @@ class AbstractEntity:
     def __str__(self):
         all_data = [f"ID: {self.id}", f"type: {self.entity_type}"]
         all_data.extend(
-            [f"{attribute}: {self[attribute]}" for attribute in self.custom_attributes])
+            [f"{attribute}: {self[attribute]}" for attribute in self.custom_attributes]
+        )
         return "\n".join(all_data)
 
     @property
@@ -90,5 +101,10 @@ class AbstractEntity:
 
     @staticmethod
     def generate_attribute_type_map(default_attributes: dict) -> dict:
-        attribute_types = {attribute: type(value) for attribute, value in default_attributes.items()}
+        attribute_types = {
+            attribute: type(value) for attribute, value in default_attributes.items()
+        }
         return attribute_types
+
+    def set_attribute(self, attribute, value):
+        setattr(self, attribute, value)

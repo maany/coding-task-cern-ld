@@ -141,9 +141,9 @@ class TestLandscapeMModelFramework(unittest.TestCase):
         mountain = Mountain(2)
         mountain.left = 5
         mountain.right = 7
-        mountain.height = 1
+        mountain.altitude = 1
 
-        expected_str_output = "ID: 2\ntype: Mountain\nleft: 5\nright: 7\nheight: 1"
+        expected_str_output = "ID: 2\ntype: Mountain\nleft: 5\nright: 7\naltitude: 1"
         mountain_str = str(mountain)
         self.assertEqual(expected_str_output, mountain_str)
 
@@ -175,7 +175,10 @@ class TestLandscapeParsing(unittest.TestCase):
         self.assertEqual(tree_as_unicode_8, Tree.unicode_8_bit)
 
     def test_loader_delegationn(self):
-        Landscape().load(self.SAMPLE_DATA)
+        landscape = Landscape()
+        landscape.load(self.SAMPLE_DATA)
+        for element in landscape:
+            print(element)
 
     def test_attribute_chain_processing(self):
         pass

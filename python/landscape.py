@@ -23,6 +23,9 @@ class Landscape:
         self.entities_with_id = {}
         self.entities_sans_id = []
 
+    def __iter__(self):
+        return iter(self.elements)
+
     @staticmethod
     def __check_attribute_type(attributes, entity):
         additional_attributes = []
