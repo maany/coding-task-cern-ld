@@ -117,7 +117,7 @@ class Landscape:
                            f"by #{entity_id}.{attribute_name}")
             return None
         available_attributes = \
-        [x[referenced_entity_id] for x in all_regular_attrs if referenced_entity_id in list(x.keys())][0]
+            [x[referenced_entity_id] for x in all_regular_attrs if referenced_entity_id in list(x.keys())][0]
         if referenced_entity_attribute in available_attributes:
             value = available_attributes[referenced_entity_attribute]
             if operation == '+':
@@ -133,17 +133,16 @@ class Landscape:
             pass
 
     def __evluatate_attributes(self, all_entity_ids, all_expression_attrs, all_regular_attrs, run_count=0):
-        for expression_attr in all_expression_attrs:
-            for entity_id, attribute_info in expression_attr.items():
-                for attribute_name, expression in attribute_info.items():
-                    # try:
-                        result = self.__evaluate_expression(entity_id, attribute_name, expression, all_entity_ids,
-                                                            all_expression_attrs,
-                                                            all_regular_attrs)
-                    # except Exception:
-                    #     logger.error("Exception")
-                    # else:
-                    #     pass
+        for entity_id, expression_attr in all_expression_attrs.items():
+                for dependent_attribute, expression in expression_attr.items():
+                    result = self.__evaluate_expression(entity_id, dependent_attribute, expression, all_entity_ids,
+                                                        all_expression_attrs,
+                                                        all_regular_attrs)
+
+                # except Exception:
+                #     logger.error("Exception")
+                # else:
+                #     pass
 
     def load(self, input):
         entities = input.strip().split("\n\n")
@@ -153,9 +152,11 @@ class Landscape:
                 self.entities_with_id[dummy_entity_id] = dummy_entity
             else:
                 self.entities_sans_id.append(dummy_entity)
-        all_expression_atts = [{entity_id: entity['expression_attrs']} for entity_id, entity in
-                               self.entities_with_id.items() if len(entity['expression_attrs']) > 0]
-        all_regular_attrs = [{entity_id: entity['regular_attrs']} for entity_id, entity in
-                             self.entities_with_id.items() if len(entity['regular_attrs']) > 0]
+        all_expression_atts = {entity_id: entity['expression_attrs'] for entity_id, entity in self.entities_with_id.items()}
+        all_regular_attrs = {entity_id: entity['regular_attrs'] for entity_id, entity in self.entities_with_id.items() }
+        # all_expression_atts = [{entity_id: entity['expression_attrs']} for entity_id, entity in
+        #                        self.entities_with_id.items() if len(entity['expression_attrs']) > 0]
+        # all_regular_attrs = [{entity_id: entity['regular_attrs']} for entity_id, entity in
+        #                      self.entities_with_id.items() if len(entity['regular_attrs']) > 0]
         all_entity_ids = [entity_id for entity_id, entity in self.entities_with_id.items()]
         self.__evluatate_attributes(all_entity_ids, all_expression_atts, all_regular_attrs)
