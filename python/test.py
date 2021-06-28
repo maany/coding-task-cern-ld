@@ -141,9 +141,9 @@ class TestLandscapeMModelFramework(unittest.TestCase):
         mountain = Mountain(2)
         mountain.left = 5
         mountain.right = 7
-        mountain.altitude = 1
+        mountain.height = 1
 
-        expected_str_output = "ID: 2\ntype: Mountain\nleft: 5\nright: 7\naltitude: 1"
+        expected_str_output = "ID: 2\ntype: Mountain\nleft: 5\nright: 7\nheight: 1"
         mountain_str = str(mountain)
         self.assertEqual(expected_str_output, mountain_str)
 

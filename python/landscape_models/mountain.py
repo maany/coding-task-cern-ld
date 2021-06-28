@@ -43,7 +43,7 @@ class Mountain(AbstractEntity, metaclass=EntityMeta):
 
     @classmethod
     def default_attribute_map(cls):
-        return {"left": 0, "right": 0, "altitude": 0}
+        return {"left": 0, "right": 0, "altitude": 0, "height": 0}
 
     def __str__(self):
         all_data = [f"ID: {self.id}", f"type: {self.entity_type}"]
