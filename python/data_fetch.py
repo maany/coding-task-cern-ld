@@ -4,3 +4,5 @@ def fetch(url, fallback_file):
     In case the server responds with a non 2xx status code,
     your fetch function should return the content of the fallback_file.
     """
+    with open(fallback_file, encoding='utf-8') as f:
+        pass

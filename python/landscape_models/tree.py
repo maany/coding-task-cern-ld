@@ -1,12 +1,12 @@
 from typing import TypeVar, Type
-from python.models.abstract_entity import AbstractEntity, EntityMeta
+from python.landscape_model_framework.abstract_entity import AbstractEntity, EntityMeta
 
 # annotation
 tree = TypeVar('tree')
 
 
 class Tree(AbstractEntity, metaclass=EntityMeta):
-    ascii_key = "dfskl"
+    unicode_8_bit = "dfskl"
 
     def __init__(self, idx=None):
         super().__init__(

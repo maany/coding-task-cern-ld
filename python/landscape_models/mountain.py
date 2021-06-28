@@ -1,13 +1,13 @@
 from typing import TypeVar, Type
 
-from python.models.abstract_entity import AbstractEntity, EntityMeta
+from python.landscape_model_framework.abstract_entity import AbstractEntity, EntityMeta
 
 # annotation
 mountain = TypeVar('mountain')
 
 
 class Mountain(AbstractEntity, metaclass=EntityMeta):
-    ascii_key = "keymouontain"
+    unicode_8_bit = "keymouontain"
 
     def __init__(self, idx=None):
         super(Mountain, self).__init__(

@@ -24,15 +24,15 @@ class EntityMeta(type):
 
     def register_loader(cls, dict):
         cls_path = f'{dict["__module__"]}.{dict["__qualname__"]}'
-        if 'ascii_key' not in dict:
-            raise ValueError(f'Please specify an class variable of type string `ascii_key` in {cls_path}'
+        if 'unicode_8_bit' not in dict:
+            raise ValueError(f'Please specify an class variable of type string `unicode_8_bit` in {cls_path}'
                              f'This value is used to find objects of type {name} while parsing input data.')
 
         if 'load' not in dict:
             raise ValueError(f'Please specify a function `load(str_repr: str) -> {cls_path}` in {cls_path}. '
                              f'This function is used to generate objects of type {name} while parsing input data.')
 
-        Landscape.registered_loaders[cls.ascii_key] = cls.load
+        Landscape.registered_loaders[cls.unicode_8_bit] = cls.load
 
 
 class AbstractEntity:

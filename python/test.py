@@ -1,7 +1,7 @@
 import unittest
 
 from python.landscape import Landscape
-from python.landscape_utils.mountain_utils import (
+from python.landscape_utils.area_algorithm import (
     sort_mountains,
     append_index_to_mountains,
     get_x_axis,
@@ -10,11 +10,11 @@ from python.landscape_utils.mountain_utils import (
     calculate_mountain_area,
     get_mountain_by_index)
 
-from python.models.mountain import Mountain
-from python.models.tree import Tree
+from python.landscape_models.mountain import Mountain
+from python.landscape_models.tree import Tree
 
 
-class Test(unittest.TestCase):
+class TestAreaAlgorithm(unittest.TestCase):
     """
     Please specify test cases (expected behaviour of the program, according to specification)
     """
@@ -105,6 +105,8 @@ class Test(unittest.TestCase):
             print(f"Total Area: {total_area}")
         self.assertEqual(total_area, 39.25)
 
+
+class TestLandscapeMModelFramework(unittest.TestCase):
     def test_entity_attributes(self):
         mountain = Mountain(1)
         mountain.left = 10
@@ -138,13 +140,17 @@ class Test(unittest.TestCase):
         mountain.height = 1
 
         expected_str_output = "ID: 2\ntype: Mountain\nleft: 5\nright: 7\nheight: 1"
-        print(f"expected: {expected_str_output}")
         mountain_str = str(mountain)
-        print(f"actual: {mountain_str}")
         self.assertEqual(expected_str_output, mountain_str)
 
     def test_loader_registration(self):
-        m = Mountain()
-        t = Tree()
-        print(Landscape.registered_loaders)
-        Landscape.registered_loaders['keymouontain']('mounntain_data')
+        self.assertEqual(2, len(Landscape.registered_loaders))
+
+    def test_mountain_loader(self):
+        pass
+
+
+class TestLandscapeParsing(unittest.TestCase):
+    def setUpClass(cls):
+        URL = "https://cern.ch/sy-epc-ccs-coding-challenge/landscape"
+        FALLBACK_FILE = "./doc/example_data_set.txt"
