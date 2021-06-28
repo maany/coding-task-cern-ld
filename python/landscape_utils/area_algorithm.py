@@ -5,6 +5,12 @@ def append_index_to_mountains(mountains):
 
 
 def sort_mountains(mountains, left_index=True):
+    """
+    Sorts the mountain dictonories used by area algorithm
+    :param mountains: indexed mountains
+    :param left_index: sort based on `left` property if True
+    :return: sorted list of mountains
+    """
     if left_index:
         key = lambda k: k["left"]
     else:
@@ -15,6 +21,11 @@ def sort_mountains(mountains, left_index=True):
 
 
 def get_x_axis(indexed_mountains):
+    """
+    Takes indexed mountains and arranges the left and right points on each mountain on the x-axis
+    :param indexed_mountains:
+    :return: a tuple of the format : (left/right, mountain_id)
+    """
     left_sorted_mountains = [
         ("left", mountain["id"], mountain["left"])
         for mountain in sort_mountains(indexed_mountains, left_index=True)
@@ -30,7 +41,9 @@ def get_x_axis(indexed_mountains):
 
 def pina_collider(x_axis_tuples):
     """
-    peak is not awesome
+    Removes peaks that are PINA i.e. Peak Is Not Alps i.e peaks that may or may not be visible but do not contribute to area calculation
+    :param x_axis_tuples:
+    :return: Peaks that contribute to area calculation i.e. parts of these peaks can be considered completely visible.
     """
     open_peaks = []
     closed_peaks = []
@@ -60,12 +73,25 @@ def pina_collider(x_axis_tuples):
 
 
 def get_mountain_by_index(indexed_mountains, index):
+    """
+    Returns the mountain dict for the mountain with specified index.
+    :param indexed_mountains: A list of all mountain dicts with index appended
+    :param index: the index to lookukup
+    :return: the mountain dict for the corresponding index
+    """
     return next(
         (mountain for mountain in indexed_mountains if mountain["id"] == index), None
     )
 
 
 def inflection_point(mountain_i, mountain_j):
+    """
+    Inflection point between consecutive mountains, mountain i and mountain j, represents the x position where mountain i
+    stops contributing to visible area and mountain j takes over
+    :param mountain_i:
+    :param mountain_j:
+    :return:
+    """
     if mountain_i["left"] >= mountain_j["left"]:
         raise IndexError("WTF error happened duuudde")
     if mountain_i["right"] <= mountain_j["left"]:
@@ -75,6 +101,13 @@ def inflection_point(mountain_i, mountain_j):
 
 
 def inflection_points_and_peak_tuples(mountains, pina_collider_filtered_peaks):
+    """
+    Returns a tuple (left_position, right_position, mountain_idx) determining the left and right points between which
+    mountain is visible.
+    :param mountains:
+    :param pina_collider_filtered_peaks:
+    :return:
+    """
     inflection_map = []
     # TODO check empty
     marker_left = get_mountain_by_index(mountains, pina_collider_filtered_peaks[0])[
@@ -96,7 +129,13 @@ def inflection_points_and_peak_tuples(mountains, pina_collider_filtered_peaks):
 
 
 def calculate_mountain_area(mountain, left, right):
+    """
 
+    :param mountain: A dictionary representing the mountain and its attributes
+    :param left: the left marker to start calculating area from
+    :param right: the right marker until which mountain area should be calculated
+    :return: mountain area clipped between the left and right points
+    """
     mountain_left = mountain["left"]
     mountain_right = mountain["right"]
 
@@ -161,9 +200,9 @@ def calculate_mountain_area(mountain, left, right):
                 side_vertical=left, side_horizonntal=(right - left)
             )
         return (
-            total_mountain_area
-            - _area_of_regular_right_triangle(left)
-            - _area_of_regular_right_triangle(mountain_right - right)
+                total_mountain_area
+                - _area_of_regular_right_triangle(left)
+                - _area_of_regular_right_triangle(mountain_right - right)
         )
     return _area_of_trapezium(
         side_vertical=(mountain_right - right), side_horizonntal=(right - left)
