@@ -25,7 +25,21 @@ class Landscape:
 
     def __iter__(self):
         return iter(self.elements)
-
+    
+    def __str__(self):
+        lines = []
+        total_entities = len(self.elements)
+        lines.append(f"Total number of entities: {total_entities}")
+        
+        entity_count_map = self.__generate_entity_count_map()
+        for entity_type, count in entity_count_map.items():
+            lines.append(f"Number of {entity_type.lower*()}: {count}")
+        lines.append("\n")
+        output = "\n".join(lines)
+        for element in self.elements:
+            output = f"{output}\n{element}\n\n"
+        return output
+    
     @staticmethod
     def __check_attribute_type(attributes, entity):
         additional_attributes = []
