@@ -39,7 +39,14 @@ class Landscape:
         for element in self.elements:
             output = f"{output}\n{element}\n\n"
         return output
-    
+    def __generate_entity_count_map(self):
+        entity_count_map = {}
+        for element in self.elements:
+            if element.entity_type not in entity_count_map:
+                entity_count_map[element.type] = 1
+            else:
+                entity_count_map[element.entity_type] = entity_count_map[element.entity_type] + 1
+
     @staticmethod
     def __check_attribute_type(attributes, entity):
         additional_attributes = []
