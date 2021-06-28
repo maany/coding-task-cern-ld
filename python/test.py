@@ -1,4 +1,6 @@
 import unittest
+
+from python.landscape import Landscape
 from python.landscape_utils.mountain_utils import (
     sort_mountains,
     append_index_to_mountains,
@@ -140,3 +142,9 @@ class Test(unittest.TestCase):
         mountain_str = str(mountain)
         print(f"actual: {mountain_str}")
         self.assertEqual(expected_str_output, mountain_str)
+
+    def test_loader_registration(self):
+        m = Mountain()
+        t = Tree()
+        print(Landscape.registered_loaders)
+        Landscape.registered_loaders['keymouontain']('mounntain_data')
