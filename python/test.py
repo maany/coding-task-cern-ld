@@ -1,5 +1,6 @@
 import unittest
 
+from python import data_fetch
 from python.landscape import Landscape
 from python.landscape_utils.area_algorithm import (
     sort_mountains,
@@ -151,6 +152,24 @@ class TestLandscapeMModelFramework(unittest.TestCase):
 
 
 class TestLandscapeParsing(unittest.TestCase):
+    @classmethod
     def setUpClass(cls):
-        URL = "https://cern.ch/sy-epc-ccs-coding-challenge/landscape"
-        FALLBACK_FILE = "./doc/example_data_set.txt"
+        cls.URL = "https://cern.ch/sy-epc-ccs-coding-challenge/landscape"
+        cls.FALLBACK_FILE = "./doc/example_data_set.txt"
+        cls.BOGUS_URL = "asdasda"
+        with open(cls.FALLBACK_FILE, encoding='utf-8') as f:
+            cls.SAMPLE_DATA = f.read()
+
+    def test_fallback_file(self):
+        fallback_data = data_fetch.fetch(self.BOGUS_URL, self.FALLBACK_FILE)
+        fallback_data.split("\n")
+        self.assertEqual(self.SAMPLE_DATA, fallback_data)
+
+    def test_unicode_types(self):
+        mountain_as_unicode_8 = self.SAMPLE_DATA.splitlines()[0]
+        tree_as_unicode_8 = self.SAMPLE_DATA.splitlines()[10]
+        self.assertEqual(mountain_as_unicode_8, Mountain.unicode_8_bit)
+        self.assertEqual(tree_as_unicode_8, Tree.unicode_8_bit)
+
+    def test_loader_delegationn(self):
+        Landscape().load(self.SAMPLE_DATA)

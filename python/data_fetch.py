@@ -5,4 +5,4 @@ def fetch(url, fallback_file):
     your fetch function should return the content of the fallback_file.
     """
     with open(fallback_file, encoding='utf-8') as f:
-        pass
+        return f.read()
