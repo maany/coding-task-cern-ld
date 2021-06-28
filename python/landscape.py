@@ -67,7 +67,7 @@ class Landscape:
                 entity_count_map[element.entity_type] = 1
             else:
                 entity_count_map[element.entity_type] = (
-                        entity_count_map[element.entity_type] + 1
+                    entity_count_map[element.entity_type] + 1
                 )
         return entity_count_map
 
@@ -244,12 +244,12 @@ class Landscape:
 
     @staticmethod
     def evaluate_attribute(
-            entity_id,
-            attr_name,
-            attr_value,
-            dummy_entity_attributes_map,
-            max_passes,
-            depth=0,
+        entity_id,
+        attr_name,
+        attr_value,
+        dummy_entity_attributes_map,
+        max_passes,
+        depth=0,
     ):
         if depth > max_passes:
             logger.error(f"Potential circular reference detected!")

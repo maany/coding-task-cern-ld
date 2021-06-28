@@ -60,26 +60,30 @@ def pina_collider(x_axis_tuples):
 
 
 def get_mountain_by_index(indexed_mountains, index):
-    return next((mountain for mountain in indexed_mountains if mountain["id"] == index), None)
+    return next(
+        (mountain for mountain in indexed_mountains if mountain["id"] == index), None
+    )
 
 
 def inflection_point(mountain_i, mountain_j):
-    if mountain_i['left'] >= mountain_j['left']:
+    if mountain_i["left"] >= mountain_j["left"]:
         raise IndexError("WTF error happened duuudde")
-    if mountain_i['right'] <= mountain_j['left']:
-        return mountain_i['right']
+    if mountain_i["right"] <= mountain_j["left"]:
+        return mountain_i["right"]
     else:
-        return mountain_j['left'] + (mountain_i['right'] - mountain_j['left']) / 2
+        return mountain_j["left"] + (mountain_i["right"] - mountain_j["left"]) / 2
 
 
 def inflection_points_and_peak_tuples(mountains, pina_collider_filtered_peaks):
     inflection_map = []
     # TODO check empty
-    marker_left = get_mountain_by_index(mountains, pina_collider_filtered_peaks[0])['left']
+    marker_left = get_mountain_by_index(mountains, pina_collider_filtered_peaks[0])[
+        "left"
+    ]
     for i, peak_idx in enumerate(pina_collider_filtered_peaks, start=0):
         if i == len(pina_collider_filtered_peaks) - 1:
             last_mountain = get_mountain_by_index(mountains, peak_idx)
-            inflection_map.append((marker_left, last_mountain['right'], peak_idx))
+            inflection_map.append((marker_left, last_mountain["right"], peak_idx))
             # TODO log breaking out of loop
             break
         next_peak_idx = pina_collider_filtered_peaks[i + 1]
@@ -93,8 +97,8 @@ def inflection_points_and_peak_tuples(mountains, pina_collider_filtered_peaks):
 
 def calculate_mountain_area(mountain, left, right):
 
-    mountain_left = mountain['left']
-    mountain_right = mountain['right']
+    mountain_left = mountain["left"]
+    mountain_right = mountain["right"]
 
     # move mountain to origin
     left = left - mountain_left
@@ -103,7 +107,7 @@ def calculate_mountain_area(mountain, left, right):
     mountain_left = 0
 
     # now, we can say that center of the mountain is at
-    mountain_center = mountain['height']
+    mountain_center = mountain["height"]
 
     if right < left:
         raise Exception("Haaww")
@@ -120,7 +124,7 @@ def calculate_mountain_area(mountain, left, right):
 
     def _area_of_trapezium(side_vertical, side_horizonntal):
         sum_of_parallel_sides = side_vertical + (side_vertical + side_horizonntal)
-        return .5 * sum_of_parallel_sides * side_horizonntal
+        return 0.5 * sum_of_parallel_sides * side_horizonntal
 
     left_included_flag = False
     right_included_flag = False
@@ -136,7 +140,9 @@ def calculate_mountain_area(mountain, left, right):
     if left_included_flag and not right_included_flag:
         if right <= mountain_center:
             return (right ** 2) / 2
-        return total_mountain_area - _area_of_regular_right_triangle(mountain_right - right)
+        return total_mountain_area - _area_of_regular_right_triangle(
+            mountain_right - right
+        )
 
     if not left_included_flag and right_included_flag:
         if left >= mountain_center:
@@ -151,7 +157,14 @@ def calculate_mountain_area(mountain, left, right):
 
     if left < mountain_center:
         if right <= mountain_center:
-            return _area_of_trapezium(side_vertical=left, side_horizonntal=(right - left))
-        return total_mountain_area - _area_of_regular_right_triangle(left) - _area_of_regular_right_triangle(
-            mountain_right - right)
-    return _area_of_trapezium(side_vertical=(mountain_right - right), side_horizonntal=(right-left))
+            return _area_of_trapezium(
+                side_vertical=left, side_horizonntal=(right - left)
+            )
+        return (
+            total_mountain_area
+            - _area_of_regular_right_triangle(left)
+            - _area_of_regular_right_triangle(mountain_right - right)
+        )
+    return _area_of_trapezium(
+        side_vertical=(mountain_right - right), side_horizonntal=(right - left)
+    )

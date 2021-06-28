@@ -106,7 +106,9 @@ class TestAreaAlgorithm(unittest.TestCase):
             mountain = get_mountain_by_index(self.indexed_mountains, mountain_idx)
             mountain_area = calculate_mountain_area(mountain, left_bound, right_bound)
             logger.debug(f"Mountain {mountain_idx}: {mountain}")
-            logger.debug(f"Area between points {left_bound}, {right_bound}: {mountain_area}")
+            logger.debug(
+                f"Area between points {left_bound}, {right_bound}: {mountain_area}"
+            )
             total_area = total_area + mountain_area
             logger.debug(f"Total Area: {total_area}")
         self.assertEqual(total_area, 39.25)

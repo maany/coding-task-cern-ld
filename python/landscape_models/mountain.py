@@ -41,7 +41,6 @@ class Mountain(AbstractEntity, metaclass=EntityMeta):
         mountain.set_attribute("height", mountain.altitude)
         return mountain
 
-
     @classmethod
     def default_attribute_map(cls):
         return {"left": 0, "right": 0, "altitude": 0}
