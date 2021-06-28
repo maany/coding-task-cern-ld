@@ -67,59 +67,9 @@ class Landscape:
                 entity_count_map[element.entity_type] = 1
             else:
                 entity_count_map[element.entity_type] = (
-                    entity_count_map[element.entity_type] + 1
+                        entity_count_map[element.entity_type] + 1
                 )
         return entity_count_map
-
-    @staticmethod
-    def __check_attribute_type(attributes, entity):
-        additional_attributes = []
-        invalid_type_attributes = []
-        entity_type = entity["type"]
-        if entity_type not in Landscape.registered_entity_schemas.keys():
-            raise SchemaNotRegisteredException(entity_type=entity_type)
-        schema = Landscape.registered_entity_schemas[entity_type]
-        for attribute, val in attributes.items():
-            try:
-                schema[attribute](val)
-            except (TypeError, ValueError) as e:
-                invalid_type_attributes.append(attribute)
-            except KeyError as e:
-                logger.warning(
-                    f"Addition attribute {attribute} of entity {entity_type} will be ignored"
-                )
-                additional_attributes.append(attribute)
-        return additional_attributes, invalid_type_attributes
-
-    @staticmethod
-    def __parse_entity_attributes(dummy_entity, attribute_list):
-        expression_attrs = {}
-        regular_attrs = {}
-        all_attrs = {}
-        invalid_attrs = []
-        for attribute in attribute_list:
-            if ":=" in attribute:
-                attr_and_val = attribute.split(":=")
-                expression_attrs[attr_and_val[0]] = attr_and_val[1]
-                all_attrs[attr_and_val[0]] = attr_and_val[1]
-            elif "=" in attribute:
-                attr_and_val = attribute.split("=")
-                regular_attrs[attr_and_val[0]] = int(attr_and_val[1])
-                all_attrs[attr_and_val[0]] = int(attr_and_val[1])
-            else:
-                logger.warning(
-                    f"Syntax error in line representing attribute {attribute} of {dummy_entity}."
-                )
-                invalid_attrs.append(attribute)
-
-        dummy_entity["regular_attrs"] = regular_attrs
-        dummy_entity["expression_attrs"] = expression_attrs
-        dummy_entity["all_attrs"] = all_attrs
-
-        if len(invalid_attrs) > 0:
-            raise InvalidSyntax(
-                f"Could not parse the following attributes: {invalid_attrs}"
-            )
 
     def __parse_entity(self, entity):
         entity_info = entity.split("\n")
@@ -135,8 +85,8 @@ class Landscape:
         dummy_entity = {"id": entity_id, "type": entity_type}
 
         try:
-            self.__parse_entity_attributes(dummy_entity, entity_attributes)
-            additional_parameters, invalid_parameters = self.__check_attribute_type(
+            self.parse_entity_attributes(dummy_entity, entity_attributes)
+            additional_parameters, invalid_parameters = self.check_attribute_type(
                 attributes=dummy_entity["regular_attrs"], entity=dummy_entity
             )
             final_regular_attrs = [
@@ -153,12 +103,6 @@ class Landscape:
             logger.error(f"syntax errors detected in {entity}")
         finally:
             return entity_id, dummy_entity
-
-    def load(self, input):
-        try:
-            self.__load(input)
-        except Exception as ex:
-            logger.error(f"Loading of data failed!!! Error: {ex}")
 
     def __load(self, input):
         dummy_entities_with_id = {}
@@ -226,6 +170,62 @@ class Landscape:
             entity = loader(dummy_entity)
             self.elements.append(entity)
 
+    def load(self, input):
+        try:
+            self.__load(input)
+        except Exception as ex:
+            logger.error(f"Loading of data failed!!! Error: {ex}")
+
+    @staticmethod
+    def check_attribute_type(attributes, entity):
+        additional_attributes = []
+        invalid_type_attributes = []
+        entity_type = entity["type"]
+        if entity_type not in Landscape.registered_entity_schemas.keys():
+            raise SchemaNotRegisteredException(entity_type=entity_type)
+        schema = Landscape.registered_entity_schemas[entity_type]
+        for attribute, val in attributes.items():
+            try:
+                schema[attribute](val)
+            except (TypeError, ValueError) as e:
+                invalid_type_attributes.append(attribute)
+            except KeyError as e:
+                logger.warning(
+                    f"Addition attribute {attribute} of entity {entity_type} will be ignored"
+                )
+                additional_attributes.append(attribute)
+        return additional_attributes, invalid_type_attributes
+
+    @staticmethod
+    def parse_entity_attributes(dummy_entity, attribute_list):
+        expression_attrs = {}
+        regular_attrs = {}
+        all_attrs = {}
+        invalid_attrs = []
+        for attribute in attribute_list:
+            if ":=" in attribute:
+                attr_and_val = attribute.split(":=")
+                expression_attrs[attr_and_val[0]] = attr_and_val[1]
+                all_attrs[attr_and_val[0]] = attr_and_val[1]
+            elif "=" in attribute:
+                attr_and_val = attribute.split("=")
+                regular_attrs[attr_and_val[0]] = int(attr_and_val[1])
+                all_attrs[attr_and_val[0]] = int(attr_and_val[1])
+            else:
+                logger.warning(
+                    f"Syntax error in line representing attribute {attribute} of {dummy_entity}."
+                )
+                invalid_attrs.append(attribute)
+
+        dummy_entity["regular_attrs"] = regular_attrs
+        dummy_entity["expression_attrs"] = expression_attrs
+        dummy_entity["all_attrs"] = all_attrs
+
+        if len(invalid_attrs) > 0:
+            raise InvalidSyntax(
+                f"Could not parse the following attributes: {invalid_attrs}"
+            )
+
     @staticmethod
     def num_attributes(dummy_entity_attributes_map):
         sum = 0
@@ -244,12 +244,12 @@ class Landscape:
 
     @staticmethod
     def evaluate_attribute(
-        entity_id,
-        attr_name,
-        attr_value,
-        dummy_entity_attributes_map,
-        max_passes,
-        depth=0,
+            entity_id,
+            attr_name,
+            attr_value,
+            dummy_entity_attributes_map,
+            max_passes,
+            depth=0,
     ):
         if depth > max_passes:
             logger.error(f"Potential circular reference detected!")
