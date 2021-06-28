@@ -4,6 +4,13 @@ import copy
 
 
 class EntityMeta(type):
+    """
+    A MetaCLass for all objects in the landscape. This class makes all landscape elements aware of each other.
+    This allows for objects to claim if is_{entity_type} is evaluated to True or False.
+    This class also creates a contract for the objects. All objects should implement a classmethod called load
+    that takes the parsed input data as a dictionary and creates an object of the entity.
+    In a later version, this class will be used to enforce schema for the attribute types of landscape entities.
+    """
     created_entities = {}
 
     def __init__(cls, name, bases, dict):
@@ -44,7 +51,7 @@ class EntityMeta(type):
                 f"In {cls_path}, please specify a classmethod default_attribute_map() -> dict that returns a "
                 f"dictionary [T] of schema -> T[attribute_name] = default_attribute_value"
             )
-
+        # TODO: beta functionality
         # Landscape.registered_loaders[cls.unicode_8_bit] = cls.load
         # Landscape.registered_entity_schemas[
         #     cls.unicode_8_bit
@@ -53,7 +60,22 @@ class EntityMeta(type):
 
 class AbstractEntity:
     """
-    A class to represent entities in a landscape
+    A class to represent entities in a landscape and adds custom class attributes like left, right, center, ...
+    These attributes are specified by the attributes dict passed to  __init__ method.
+
+    To create a new Landscape entity, please subclass this class and make sure that the subclass has the EntityMeta metaclass
+    i.e.
+
+    ```
+    class NewLandscapeEntity(AbstractEntity, metaclass = EntityMeta):
+        def __init__(self, idx=None):
+            super().__init__(idx=idx, attributes = {'left': 0, 'right': 0}
+
+        @classmethod
+        def load(cls, dummy_entity: dict):
+         ...
+    ```
+    Please see landscape_models.mountain.Mountain and landscape_models.tree.Tree for examples.
     """
 
     def __init__(self, attributes: dict, idx=None):
