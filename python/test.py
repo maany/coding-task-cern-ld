@@ -9,7 +9,8 @@ from python.landscape_utils.area_algorithm import (
     pina_collider as pina,
     inflection_points_and_peak_tuples,
     calculate_mountain_area,
-    get_mountain_by_index)
+    get_mountain_by_index,
+)
 
 from python.landscape_models.mountain import Mountain
 from python.landscape_models.tree import Tree
@@ -60,7 +61,7 @@ class TestAreaAlgorithm(unittest.TestCase):
             (4, 8.5, 5),
             (8.5, 10.5, 6),
             (10.5, 11.5, 2),
-            (11.5, 15, 1)
+            (11.5, 15, 1),
         ]
 
     def test_indexed_mountains(self):
@@ -90,7 +91,9 @@ class TestAreaAlgorithm(unittest.TestCase):
         self.assertListEqual(self.expected_pina_collider_output, pina_collisions)
 
     def test_inflection_map(self):
-        region_area_map = inflection_points_and_peak_tuples(self.indexed_mountains, self.expected_pina_collider_output)
+        region_area_map = inflection_points_and_peak_tuples(
+            self.indexed_mountains, self.expected_pina_collider_output
+        )
         self.assertListEqual(self.expected_inflection_map, region_area_map)
 
     def test_area(self):
@@ -113,15 +116,15 @@ class TestLandscapeMModelFramework(unittest.TestCase):
         mountain.left = 10
         self.assertEqual(mountain.left, 10)
 
-        self.assertEqual(mountain.left, mountain['left'])
+        self.assertEqual(mountain.left, mountain["left"])
 
         mountain.right = 20
-        self.assertEqual(mountain.right, mountain['right'])
+        self.assertEqual(mountain.right, mountain["right"])
 
         mountain.left = 15
-        self.assertEqual(mountain['left'], 15)
-        self.assertEqual(mountain['left'], mountain.left)
-        self.assertEqual(mountain._attribute_dict['left'], 15)
+        self.assertEqual(mountain["left"], 15)
+        self.assertEqual(mountain["left"], mountain.left)
+        self.assertEqual(mountain._attribute_dict["left"], 15)
 
     def test_entity_types(self):
         mountain = Mountain(0)
@@ -155,9 +158,9 @@ class TestLandscapeParsing(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.URL = "https://cern.ch/sy-epc-ccs-coding-challenge/landscape"
-        cls.FALLBACK_FILE = "./doc/example_data_set.txt"
+        cls.FALLBACK_FILE = "./python/doc/example_data_set.txt"
         cls.BOGUS_URL = "asdasda"
-        with open(cls.FALLBACK_FILE, encoding='utf-8') as f:
+        with open(cls.FALLBACK_FILE, encoding="utf-8") as f:
             cls.SAMPLE_DATA = f.read()
 
     def test_fallback_file(self):
@@ -173,3 +176,6 @@ class TestLandscapeParsing(unittest.TestCase):
 
     def test_loader_delegationn(self):
         Landscape().load(self.SAMPLE_DATA)
+
+    def test_attribute_chain_processing(self):
+        pass
