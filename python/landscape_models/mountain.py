@@ -3,6 +3,7 @@ from typing import TypeVar, Type
 from landscape_model_framework.abstract_entity import AbstractEntity, EntityMeta
 from landscape_model_framework.exceptions import LoadingError
 
+
 # annotation
 mountain = TypeVar("mountain")
 
@@ -37,8 +38,17 @@ class Mountain(AbstractEntity, metaclass=EntityMeta):
             mountain.right = int(mountain.left + 2 * mountain.altitude)
         elif missing_attr == "altitude":
             mountain.altitude = int(0.5 * (mountain.right - mountain.left))
+        mountain.set_attribute("height", mountain.altitude)
         return mountain
 
     @classmethod
     def default_attribute_map(cls):
         return {"left": 0, "right": 0, "altitude": 0}
+
+    def __str__(self):
+        all_data = [f"ID: {self.id}", f"type: {self.entity_type}"]
+        attributes_to_render = ["left", "right", "height"]
+        all_data.extend(
+            [f"{attribute}: {self[attribute]}" for attribute in attributes_to_render]
+        )
+        return "\n".join(all_data)

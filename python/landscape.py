@@ -1,5 +1,6 @@
 import logging
 import re
+import importlib
 
 from landscape_model_framework.exceptions import (
     SchemaNotRegisteredException,
@@ -9,6 +10,9 @@ from landscape_model_framework.exceptions import (
 
 logger = logging.getLogger(__name__)
 
+from landscape_models.mountain import Mountain
+from landscape_models.tree import Tree
+
 
 class Landscape:
     """
@@ -16,8 +20,15 @@ class Landscape:
     and functionality to access and print those entities
     """
 
-    registered_loaders = {}
-    registered_entity_schemas = {}
+    registered_loaders = {
+        Mountain.unicode_8_bit: Mountain.load,
+        Tree.unicode_8_bit: Tree.load
+        # new entities
+    }
+    registered_entity_schemas = {
+        Mountain.unicode_8_bit: Mountain.default_attribute_map(),
+        Tree.unicode_8_bit: Tree.default_attribute_map(),
+    }
 
     def __init__(self):
         self.elements = []

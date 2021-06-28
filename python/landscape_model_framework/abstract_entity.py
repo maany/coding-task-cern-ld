@@ -1,6 +1,6 @@
 import copy
 
-from landscape import Landscape
+# from landscape import Landscape
 
 
 class EntityMeta(type):
@@ -45,10 +45,10 @@ class EntityMeta(type):
                 f"dictionary [T] of schema -> T[attribute_name] = default_attribute_value"
             )
 
-        Landscape.registered_loaders[cls.unicode_8_bit] = cls.load
-        Landscape.registered_entity_schemas[
-            cls.unicode_8_bit
-        ] = cls.default_attribute_map
+        # Landscape.registered_loaders[cls.unicode_8_bit] = cls.load
+        # Landscape.registered_entity_schemas[
+        #     cls.unicode_8_bit
+        # ] = cls.default_attribute_map
 
 
 class AbstractEntity:
