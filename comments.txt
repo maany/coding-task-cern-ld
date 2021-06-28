@@ -1,1 +1,12 @@
 # Use this file for any additional comments / explanations you might want to add
+1. check if area algorithm can handle mountain ranges separated by some x-distance.
+2. add test cases for area calculation outside of the example provided.
+3. fix rendering i.e. __str__ function of mountain/trees or landscape.
+4. metaclass auto-registration does not works in tests, but not when executing main.py,
+   This is due to the fact that when we run main.py, we need to force loading of AbstractEntity objects before
+   Landscape objects. This can be done by adding a metaclass for Landscape class and loading AbstractEntities over there.
+5. add proper documentation
+6. fix flake8 errors
+7. test the dynamic programming function for multiple levels of attribute dependencies.
+8. add a permormance timer and measure algorithm runtimes.
+
