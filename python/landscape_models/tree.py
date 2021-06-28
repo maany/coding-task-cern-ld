@@ -1,6 +1,6 @@
 from typing import TypeVar, Type
-from python.landscape_model_framework.abstract_entity import AbstractEntity, EntityMeta
-from python.landscape_model_framework.exceptions import LoadingError
+from landscape_model_framework.abstract_entity import AbstractEntity, EntityMeta
+from landscape_model_framework.exceptions import LoadingError
 
 # annotation
 tree = TypeVar("tree")

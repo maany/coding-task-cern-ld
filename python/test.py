@@ -1,8 +1,8 @@
 import unittest
 
-from python import data_fetch
-from python.landscape import Landscape
-from python.landscape_utils.area_algorithm import (
+import data_fetch
+from landscape import Landscape
+from landscape_utils.area_algorithm import (
     sort_mountains,
     append_index_to_mountains,
     get_x_axis,
@@ -12,9 +12,8 @@ from python.landscape_utils.area_algorithm import (
     get_mountain_by_index,
 )
 
-from python.landscape_models.mountain import Mountain
-from python.landscape_models.tree import Tree
-
+from landscape_models.mountain import Mountain
+from landscape_models.tree import Tree
 
 class TestAreaAlgorithm(unittest.TestCase):
     """
@@ -158,7 +157,7 @@ class TestLandscapeParsing(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.URL = "https://cern.ch/sy-epc-ccs-coding-challenge/landscape"
-        cls.FALLBACK_FILE = "./python/doc/example_data_set.txt"
+        cls.FALLBACK_FILE = "./doc/example_data_set.txt"
         cls.BOGUS_URL = "asdasda"
         with open(cls.FALLBACK_FILE, encoding="utf-8") as f:
             cls.SAMPLE_DATA = f.read()
@@ -183,3 +182,7 @@ class TestLandscapeParsing(unittest.TestCase):
 
     def test_attribute_chain_processing(self):
         pass
+    
+    def test_landscapre_registration(self):
+        print("Modules")
+        print(Landscape().register_loaders())

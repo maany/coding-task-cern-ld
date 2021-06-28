@@ -1,3 +1,8 @@
+# fix imports and make runnable
+# add more tests
+# rename function to private in Landscape
+# remove todos and prints, add docs, user guide
+
 # The landscape challenge
 
 This challenge consists of two parts. We advise you to read the instructions of both parts first before you start working on either of them. The instructions of Part 2 follow below Part 1.
