@@ -140,34 +140,30 @@ class Landscape:
         finally:
             return entity_id, dummy_entity
 
-        for entity_id, expression_attr in all_expression_attrs.items():
-            for dependent_attribute, expression in expression_attr.items():
-                result = self.__evaluate_expression(
-                    entity_id,
-                    dependent_attribute,
-                    expression,
-                    all_entity_ids,
-                    all_expression_attrs,
-                    all_regular_attrs,
-                )
-
-            # except Exception:
-            #     logger.error("Exception")
-            # else:
-            #     pass
-
     def load(self, input):
+        try:
+            self.__load(self, input)
+        except Exception as ex:
+            logger.error(f"Loading of data failed!!! Error: {ex}")
+
+    def __load(self, input):
         dummy_entities_with_id = {}
         dummy_entities_without_id = []
         entities = input.strip().split("\n\n")
 
         # parse entities
         for entity in entities:
-            dummy_entity_id, dummy_entity = self.__parse_entity(entity)
-            if dummy_entity_id is not None:
-                dummy_entities_with_id[dummy_entity_id] = dummy_entity
+            try:
+                dummy_entity_id, dummy_entity = self.__parse_entity(entity)
+            except InvalidSyntax as ex:
+                logger.error(ex)
+                logger.warning(f"Error while parsing entity {entity}. Skipping!!")
+                continue
             else:
-                dummy_entities_without_id.append(dummy_entity)
+                if dummy_entity_id is not None:
+                    dummy_entities_with_id[dummy_entity_id] = dummy_entity
+                else:
+                    dummy_entities_without_id.append(dummy_entity)
 
         # evaluate attributes for entities with an id
         dummy_entity_attributes_map = {
