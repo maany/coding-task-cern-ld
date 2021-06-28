@@ -179,6 +179,7 @@ class TestLandscapeParsing(unittest.TestCase):
         landscape.load(self.SAMPLE_DATA)
         for element in landscape:
             print(element)
+        print(landscape)
 
     def test_attribute_chain_processing(self):
         pass
