@@ -83,10 +83,6 @@ class Landscape:
             try:
                 schema[attribute](val)
             except (TypeError, ValueError) as e:
-                logger.warning(
-                    f"Value supplied for attribute {attribute} of {entity_type} is incompatible "
-                    f"with {schema[attribute]}"
-                )
                 invalid_type_attributes.append(attribute)
             except KeyError as e:
                 logger.warning(

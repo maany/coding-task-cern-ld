@@ -22,7 +22,6 @@ def fetch(url, fallback_file):
             data = f.read()
         print(ex)
     else:
-        print(f"response code is {response_code}")
         if response_code < 200 or response_code >= 300:
             pass
         data = response.read().decode("utf-8")
