@@ -2,6 +2,7 @@ import copy
 
 from landscape import Landscape
 
+
 class EntityMeta(type):
     created_entities = {}
 

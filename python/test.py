@@ -15,6 +15,7 @@ from landscape_utils.area_algorithm import (
 from landscape_models.mountain import Mountain
 from landscape_models.tree import Tree
 
+
 class TestAreaAlgorithm(unittest.TestCase):
     """
     Please specify test cases (expected behaviour of the program, according to specification)
@@ -182,7 +183,7 @@ class TestLandscapeParsing(unittest.TestCase):
 
     def test_attribute_chain_processing(self):
         pass
-    
+
     def test_landscapre_registration(self):
         print("Modules")
         print(Landscape().register_loaders())

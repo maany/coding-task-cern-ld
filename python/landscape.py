@@ -4,7 +4,7 @@ import re
 from landscape_model_framework.exceptions import (
     SchemaNotRegisteredException,
     InvalidSyntax,
-    LoadingError
+    LoadingError,
 )
 
 logger = logging.getLogger(__name__)
@@ -15,8 +15,9 @@ class Landscape:
     Class providing functionality to parse input data into a data entities
     and functionality to access and print those entities
     """
+
     registered_loaders = {}
-    registered_entity_schemas  = {}
+    registered_entity_schemas = {}
 
     def __init__(self):
         self.elements = []
@@ -29,8 +30,8 @@ class Landscape:
     @staticmethod
     def register_loaders():
         mod = __import__("landscape_model_framework")
-        for klass in vars(mod): 
-            o =  getattr(mod, klass)
+        for klass in vars(mod):
+            o = getattr(mod, klass)
             if type(o) == type:
                 print(o)
 
