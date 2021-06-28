@@ -43,21 +43,24 @@ class Landscape:
     def __parse_entity_attributes(dummy_entity, attribute_list):
         expression_attrs = {}
         regular_attrs = {}
+        all_attrs = {}
         invalid_attrs = []
         for attribute in attribute_list:
             if ':=' in attribute:
                 attr_and_val = attribute.split(':=')
                 expression_attrs[attr_and_val[0]] = attr_and_val[1]
-
+                all_attrs[attr_and_val[0]] = attr_and_val[1]
             elif '=' in attribute:
                 attr_and_val = attribute.split('=')
                 regular_attrs[attr_and_val[0]] = int(attr_and_val[1])
+                all_attrs[attr_and_val[0]] = int(attr_and_val[1])
             else:
                 logger.warning(f"Syntax error in line representing attribute {attribute} of {dummy_entity}.")
                 invalid_attrs.append(attribute)
 
         dummy_entity['regular_attrs'] = regular_attrs
         dummy_entity['expression_attrs'] = expression_attrs
+        dummy_entity['all_attrs'] = all_attrs
 
         if len(invalid_attrs) > 0:
             raise InvalidSyntax(f'Could not parse the following attributes: {invalid_attrs}')
@@ -127,22 +130,21 @@ class Landscape:
             else:
                 logger.error(f'Cannot identify operation "{operation}" in {expression}')
                 return None
-            all_regular_attrs[e]
         referenced_entity = self.__search_by_entity_id(referenced_entity_id, all_expression_attrs)
         if referenced_entity is not None:
             pass
 
     def __evluatate_attributes(self, all_entity_ids, all_expression_attrs, all_regular_attrs, run_count=0):
         for entity_id, expression_attr in all_expression_attrs.items():
-                for dependent_attribute, expression in expression_attr.items():
-                    result = self.__evaluate_expression(entity_id, dependent_attribute, expression, all_entity_ids,
-                                                        all_expression_attrs,
-                                                        all_regular_attrs)
+            for dependent_attribute, expression in expression_attr.items():
+                result = self.__evaluate_expression(entity_id, dependent_attribute, expression, all_entity_ids,
+                                                    all_expression_attrs,
+                                                    all_regular_attrs)
 
-                # except Exception:
-                #     logger.error("Exception")
-                # else:
-                #     pass
+            # except Exception:
+            #     logger.error("Exception")
+            # else:
+            #     pass
 
     def load(self, input):
         entities = input.strip().split("\n\n")
@@ -152,11 +154,72 @@ class Landscape:
                 self.entities_with_id[dummy_entity_id] = dummy_entity
             else:
                 self.entities_sans_id.append(dummy_entity)
-        all_expression_atts = {entity_id: entity['expression_attrs'] for entity_id, entity in self.entities_with_id.items()}
-        all_regular_attrs = {entity_id: entity['regular_attrs'] for entity_id, entity in self.entities_with_id.items() }
+        # all_expression_atts = {entity_id: entity['expression_attrs'] for entity_id, entity in
+        #                        self.entities_with_id.items() if len(entity['expression_attrs']) > 0}
+        # all_regular_attrs = {entity_id: entity['regular_attrs'] for entity_id, entity in self.entities_with_id.items()
+        #                      if len(entity['regular_attrs']) > 0}
         # all_expression_atts = [{entity_id: entity['expression_attrs']} for entity_id, entity in
         #                        self.entities_with_id.items() if len(entity['expression_attrs']) > 0]
         # all_regular_attrs = [{entity_id: entity['regular_attrs']} for entity_id, entity in
         #                      self.entities_with_id.items() if len(entity['regular_attrs']) > 0]
-        all_entity_ids = [entity_id for entity_id, entity in self.entities_with_id.items()]
-        self.__evluatate_attributes(all_entity_ids, all_expression_atts, all_regular_attrs)
+        # all_entity_ids = [entity_id for entity_id, entity in self.entities_with_id.items()]
+        # self.__evluatate_attributes(all_entity_ids, all_expression_atts, all_regular_attrs)
+        dummy_entity_attributes_map = {entity_id: entity['all_attrs'] for entity_id, entity in
+                                       self.entities_with_id.items()}
+        max_passes = Landscape.num_attributes(dummy_entity_attributes_map)
+        for entity_id, attributes in dummy_entity_attributes_map.items():
+            for attr_name, attr_val in attributes.items():
+                evaluated_val = Landscape.evaluate_attribute(entity_id, attr_name, attr_val,
+                                                             dummy_entity_attributes_map, max_passes)
+                dummy_entity_attributes_map[entity_id][attr_name] = evaluated_val
+        pass
+
+    @staticmethod
+    def num_attributes(dummy_entity_attributes_map):
+        sum = 0
+        for entity, attributes in dummy_entity_attributes_map.items():
+            sum = sum + len(attributes)
+        return sum
+
+    @staticmethod
+    def parse_attribute_expression(attribute_expression):
+        match = re.search("#(\d).(\w*)([+-])(\d)", attribute_expression)
+        referenced_entity_id = int(match.group(1))
+        referenced_entity_attribute = match.group(2)
+        operation = match.group(3)
+        offset = int(match.group(4))
+        return referenced_entity_id, referenced_entity_attribute, operation, offset
+
+    @staticmethod
+    def evaluate_attribute(entity_id, attr_name, attr_value, dummy_entity_attributes_map, max_passes, depth=0):
+        if depth > max_passes:
+            logger.error(f"Potential circular reference detected!")
+            return attr_value
+        if isinstance(attr_value, int):
+            return attr_value
+        print('*******')
+        print(attr_name, attr_value)
+
+        referenced_entity_id, referenced_entity_attribute, operation, offset = Landscape.parse_attribute_expression(
+            attr_value)
+        print(referenced_entity_id, referenced_entity_attribute)
+        referenced_entity_attribute_value = dummy_entity_attributes_map[referenced_entity_id][
+            referenced_entity_attribute]
+        if isinstance(referenced_entity_attribute_value, int):
+            if operation == '+':
+                val = referenced_entity_attribute_value + offset
+            elif operation == '-':
+                val = referenced_entity_attribute_value - offset
+            else:
+                val = referenced_entity_attribute_value
+            dummy_entity_attributes_map[entity_id][attr_name] = val
+            return val
+        else:
+            val = Landscape.evaluate_attribute(
+                referenced_entity_id, referenced_entity_attribute, referenced_entity_attribute_value,
+                dummy_entity_attributes_map, max_passes,
+                depth + 1
+            )
+            dummy_entity_attributes_map[referenced_entity_id][attr_name] = val
+            dummy_entity_attributes_map[entity_id][attr_name] = val
+            return val
