@@ -56,8 +56,8 @@ class Landscape:
             lines.append(f"Number of {entity_type.lower()}s: {count}")
         lines.append("\n")
         output = "\n".join(lines)
-        for element in self.elements:
-            output = f"{output}\n{element}\n\n"
+        for i, element in enumerate(self.elements, start=1):
+            output = f"{output}\nEntity {i}\n{element}\n\n"
         return output
 
     def __generate_entity_count_map(self):
