@@ -15,6 +15,8 @@ from landscape_utils.area_algorithm import (
 from landscape_models.mountain import Mountain
 from landscape_models.tree import Tree
 
+from python.area_algorithm import visible_area
+
 logger = logging.getLogger(__name__)
 
 
@@ -112,6 +114,20 @@ class TestAreaAlgorithm(unittest.TestCase):
             total_area = total_area + mountain_area
             logger.debug(f"Total Area: {total_area}")
         self.assertEqual(total_area, 39.25)
+
+    def test_area_2(self):
+        mountains_area_map_list = [
+            {"9": [{"left": 0, "right": 6, "height": 3}, {"left": 0, "right": 2, "height": 1}]},
+            {"18": [{"left": 0, "right": 6, "height": 3}, {"left": 6, "right": 12, "height": 3}]},
+            {"18": [{"left": 0, "right": 6, "height": 3}, {"left": 7, "right": 13, "height": 3}]},
+            {"9": [{"left": 0, "right": 6, "height": 3}, {"left": 0, "right": 2, "height": 1},
+                   {"left": 1, "right": 4, "height": 2}]},
+            {"9": [{"left": -1, "right": 5, "height": 3}, {"left": -1, "right": 1, "height": 1},
+                   {"left": 0, "right": 3, "height": 2}]},
+        ]
+        for mountains_area_map in mountains_area_map_list:
+            for area, mountains in mountains_area_map.items():
+                self.assertEqual(float(area), visible_area(mountains))
 
 
 class TestLandscapeMModelFramework(unittest.TestCase):
