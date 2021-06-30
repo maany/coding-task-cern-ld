@@ -64,7 +64,7 @@ def pina_collider(x_axis_tuples):
                         super_peak = open_peaks[0]
                     else:
                         # TODO log message
-                        break
+                        super_peak = None
                 else:
                     pina_peaks.append(idx)
             else:
