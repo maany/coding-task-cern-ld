@@ -16,7 +16,7 @@ class Tree(AbstractEntity, metaclass=EntityMeta):
     def load(cls: Type[tree], dummy_tree: dict) -> tree:
         if len(dummy_tree["all_attrs"]) < 2:
             raise LoadingError(
-                f"Specify both center, altitude for Tree entity {dummy_mountain}."
+                f"Specify both center, altitude for Tree entity {dummy_tree}."
             )
 
         tree = None
@@ -34,3 +34,13 @@ class Tree(AbstractEntity, metaclass=EntityMeta):
     @classmethod
     def default_attribute_map(cls):
         return {"center": 0, "altitude": 0}
+
+    def __str__(self):
+        all_data = [f"ID: {self.id}", f"type: {self.entity_type}"]
+        attributes_to_render = ["center", "altitude"]
+        for attribute in attributes_to_render:
+            if attribute == 'altitude':
+                all_data.append(f"height: {self[attribute]}")
+            else:
+                all_data.append(f"{attribute}: {self[attribute]}")
+        return "\n".join(all_data)

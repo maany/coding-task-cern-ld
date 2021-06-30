@@ -49,6 +49,6 @@ class Mountain(AbstractEntity, metaclass=EntityMeta):
         all_data = [f"ID: {self.id}", f"type: {self.entity_type}"]
         attributes_to_render = ["left", "right", "height"]
         all_data.extend(
-            [f"{attribute}: {self[attribute]}" for attribute in attributes_to_render]
+            [f"{attribute}: {self[attribute]}" for attribute in attributes_to_render if attribute != 'altitude']
         )
         return "\n".join(all_data)
